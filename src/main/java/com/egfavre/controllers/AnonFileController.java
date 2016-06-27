@@ -79,9 +79,19 @@ public class AnonFileController {
     }
 
     @RequestMapping(path = "/delete", method = RequestMethod.POST)
-    public String delete(int fileId) {
-        files.delete(fileId);
-        return "redirect:/";
+    public String delete(int fileId, String deletePassword) throws Exception {
+        AnonFile f = files.findOne(fileId);
+
+        if (f.getPerm()==true){
+            throw new Exception("This is a permanent file.");
+        }
+        if ((f.getPassword()!=null) && (!PasswordStorage.verifyPassword(deletePassword, f.getPassword()))){
+                throw new Exception("wrong password");
+            }
+        else {
+            files.delete(fileId);
+            return "redirect:/";
+        }
     }
 }
 

@@ -87,4 +87,12 @@ public class AnonFile {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
