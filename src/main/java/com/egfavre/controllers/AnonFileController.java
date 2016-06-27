@@ -52,7 +52,9 @@ public class AnonFileController {
             if (permanent != null){
                 perm = true;
             }
-            AnonFile anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName(), perm);
+            String comment = request.getParameter("comment");
+
+            AnonFile anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName(), perm, comment);
             files.save(anonFile);
         } else {
             Iterable<AnonFile> fileList = files.findByPerm(false);
