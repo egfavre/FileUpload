@@ -35,7 +35,7 @@ public class AnonFileController {
         Server.createWebServer().start();
     }
 
-    @RequestMapping (path = "/upload", method = RequestMethod.POST)
+    @RequestMapping(path = "/upload", method = RequestMethod.POST)
     public String upload(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException, PasswordStorage.CannotPerformOperationException {
         int count = (int) files.count();
         if (count < 10) {
@@ -50,7 +50,7 @@ public class AnonFileController {
 
             String permanent = request.getParameter("perm");
             Boolean perm = false;
-            if (permanent != null){
+            if (permanent != null) {
                 perm = true;
             }
             String comment = request.getParameter("comment");
@@ -58,10 +58,9 @@ public class AnonFileController {
             String password = request.getParameter("password");
 
             AnonFile anonFile = new AnonFile();
-            if (password != null){
+            if (password != null) {
                 anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName(), perm, comment, PasswordStorage.createHash(password));
-            }
-            else {
+            } else {
                 anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName(), perm, comment);
             }
             files.save(anonFile);
@@ -76,6 +75,12 @@ public class AnonFileController {
             int least = intList.get(0);
             files.delete(least);
         }
+        return "redirect:/";
+    }
+
+    @RequestMapping(path = "/delete", method = RequestMethod.POST)
+    public String delete(int fileId) {
+        files.delete(fileId);
         return "redirect:/";
     }
 }
