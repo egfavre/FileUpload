@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,7 +35,7 @@ public class AnonFileController {
     }
 
     @RequestMapping (path = "/upload", method = RequestMethod.POST)
-    public String upload(MultipartFile file) throws IOException {
+    public String upload(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
         int count = (int) files.count();
         if (count < 10) {
 
@@ -46,10 +47,15 @@ public class AnonFileController {
             FileOutputStream fos = new FileOutputStream(uploadedFile);
             fos.write(file.getBytes());
 
-            AnonFile anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName());
+            String permanent = request.getParameter("perm");
+            Boolean perm = false;
+            if (permanent != null){
+                perm = true;
+            }
+            AnonFile anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName(), perm);
             files.save(anonFile);
         } else {
-            Iterable<AnonFile> fileList = files.findAll();
+            Iterable<AnonFile> fileList = files.findByPerm(false);
             ArrayList<Integer> intList = new ArrayList<>();
             for (AnonFile f : fileList) {
                 int index = f.getId();
