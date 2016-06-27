@@ -24,6 +24,8 @@ public class AnonFile {
 
     String comment;
 
+    String password;
+
     public AnonFile() {
     }
 
@@ -32,6 +34,14 @@ public class AnonFile {
         this.realFilename = realFilename;
         this.perm = perm;
         this.comment = comment;
+    }
+
+    public AnonFile(String originalFilename, String realFilename, Boolean perm, String comment, String password) {
+        this.originalFilename = originalFilename;
+        this.realFilename = realFilename;
+        this.perm = perm;
+        this.comment = comment;
+        this.password = password;
     }
 
     public int getId() {

@@ -2,6 +2,7 @@ package com.egfavre.controllers;
 
 import com.egfavre.entities.AnonFile;
 import com.egfavre.services.AnonFileRepository;
+import com.egfavre.utils.PasswordStorage;
 import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,7 +36,7 @@ public class AnonFileController {
     }
 
     @RequestMapping (path = "/upload", method = RequestMethod.POST)
-    public String upload(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String upload(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws IOException, PasswordStorage.CannotPerformOperationException {
         int count = (int) files.count();
         if (count < 10) {
 
@@ -54,7 +55,15 @@ public class AnonFileController {
             }
             String comment = request.getParameter("comment");
 
-            AnonFile anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName(), perm, comment);
+            String password = request.getParameter("password");
+
+            AnonFile anonFile = new AnonFile();
+            if (password != null){
+                anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName(), perm, comment, PasswordStorage.createHash(password));
+
+            }
+            else {
+                anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName(), perm, comment);}
             files.save(anonFile);
         } else {
             Iterable<AnonFile> fileList = files.findByPerm(false);
