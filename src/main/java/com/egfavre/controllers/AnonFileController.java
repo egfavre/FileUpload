@@ -60,10 +60,10 @@ public class AnonFileController {
             AnonFile anonFile = new AnonFile();
             if (password != null){
                 anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName(), perm, comment, PasswordStorage.createHash(password));
-
             }
             else {
-                anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName(), perm, comment);}
+                anonFile = new AnonFile(file.getOriginalFilename(), uploadedFile.getName(), perm, comment);
+            }
             files.save(anonFile);
         } else {
             Iterable<AnonFile> fileList = files.findByPerm(false);
